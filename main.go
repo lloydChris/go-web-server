@@ -1,8 +1,11 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
 	"strings"
+
+	_ "github.com/lib/pq"
 )
 
 func sayHello(w http.ResponseWriter, r *http.Request) {
@@ -14,8 +17,20 @@ func sayHello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	psqlConn := "host=localhost port=5432 user=postgres password=devpwd dbname=postgres sslmode=disable"
+	db, err := sql.Open("postgres", psqlConn)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+
 	http.HandleFunc("/", sayHello)
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8081", nil); err != nil {
 		panic(err)
 	}
 }
