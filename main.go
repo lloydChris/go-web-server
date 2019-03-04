@@ -2,19 +2,13 @@ package main
 
 import (
 	"database/sql"
+	"go-web-server/handlers"
 	"net/http"
-	"strings"
+
+	"github.com/gorilla/mux"
 
 	_ "github.com/lib/pq"
 )
-
-func sayHello(w http.ResponseWriter, r *http.Request) {
-	message := r.URL.Path
-	message = strings.TrimPrefix(message, "/")
-	message = "Hello " + message
-
-	w.Write([]byte(message))
-}
 
 func main() {
 	psqlConn := "host=localhost port=5432 user=postgres password=devpwd dbname=postgres sslmode=disable"
@@ -29,8 +23,9 @@ func main() {
 		panic(err)
 	}
 
-	http.HandleFunc("/", sayHello)
-	if err := http.ListenAndServe(":8081", nil); err != nil {
-		panic(err)
-	}
+	router := mux.NewRouter()
+
+	router.HandleFunc("/animal", handlers.GetAnimal).Methods("GET")
+
+	http.ListenAndServe(":8081", router)
 }
