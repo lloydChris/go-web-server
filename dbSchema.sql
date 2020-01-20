@@ -1,0 +1,5 @@
+CREATE TABLE animal (
+  id    SERIAL PRIMARY KEY,
+  name  VARCHAR(100) NOT NULL,
+  add_dt  TIMESTAMP
+)

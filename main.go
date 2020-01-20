@@ -6,8 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-
-	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -25,7 +23,7 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/animal", handlers.GetAnimal).Methods("GET")
+	router.HandleFunc("/animal/{id}", handlers.GetAnimal).Methods("GET")
 
 	http.ListenAndServe(":8081", router)
 }
