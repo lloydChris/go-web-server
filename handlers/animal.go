@@ -2,19 +2,24 @@ package handlers
 
 import (
 	"fmt"
+	"go-web-server/dal"
 	"net/http"
-	"strings"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
+//GetAnimal an Animal
 func GetAnimal(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Got Animal")
+	fmt.Println("Getting Animal...")
 	pathParams := mux.Vars(r)
 
-	message := r.URL.Path
-	message = strings.TrimPrefix(message, "/")
-	message = "This is an " + pathParams["id"]
+	animalID, _ := strconv.Atoi(pathParams["id"])
+	fmt.Println(animalID)
+	anAnimal := dal.Get(animalID)
+
+	fmt.Println(anAnimal)
+	message := "This is an " + anAnimal
 
 	w.Write([]byte(message))
 }
