@@ -15,7 +15,7 @@ type Animal struct {
 }
 
 //Get an aminal
-func Get(id int) string {
+func Get(id int) Animal {
 	fmt.Println("Dal for animal")
 	psqlConn := "host=localhost port=5432 user=postgres password=devpwd dbname=postgres sslmode=disable"
 	db, err := sql.Open("postgres", psqlConn)
@@ -33,10 +33,13 @@ func Get(id int) string {
 		panic(err)
 	}
 
-	var anAnimal string
-	qerr := db.QueryRow(`SELECT name FROM animal WHERE id =$1`, id).Scan(&anAnimal)
+	var anAnimal Animal
 
-	if qerr != nil {
+	row := db.QueryRow(`SELECT id, name, add_dt FROM animal WHERE id =$1`, id)
+	err = row.Scan(&anAnimal.ID, &anAnimal.Name, &anAnimal.AddDt)
+
+	fmt.Println(anAnimal)
+	if err != nil {
 		fmt.Println("query for animal failed")
 		fmt.Println(err)
 		panic(err)

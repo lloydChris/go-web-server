@@ -19,7 +19,7 @@ func GetAnimal(w http.ResponseWriter, r *http.Request) {
 	anAnimal := dal.Get(animalID)
 
 	fmt.Println(anAnimal)
-	message := "This is an " + anAnimal
+	message := "This is an " + anAnimal.Name
 
 	w.Write([]byte(message))
 }
