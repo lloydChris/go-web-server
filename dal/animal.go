@@ -1,32 +1,30 @@
 package dal
 
 import (
-	"database/sql"
+	"fmt"
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" //We need a DB
 )
 
+//Animal is the DB object
 type Animal struct {
-	id     int
-	name   string
-	add_dt string
+	ID    int
+	Name  string
+	AddDt string
 }
 
-func Get(id int) {
-	psqlConn := "host=localhost port=5432 user=postgres password=devpwd dbname=postgres sslmode=disable"
-	db, err := sql.Open("postgres", psqlConn)
+//GetAnimal an animal
+func (db *DB) GetAnimal(id int) (Animal, error) {
+	var anAnimal Animal
+
+	row := db.QueryRow(`SELECT id, name, add_dt FROM animal WHERE id =$1`, id)
+	err := row.Scan(&anAnimal.ID, &anAnimal.Name, &anAnimal.AddDt)
+
+	fmt.Printf("Retrived: %+v\n", anAnimal)
 	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
-	err = db.Ping()
-	if err != nil {
-		panic(err)
+		fmt.Println("query for animal failed")
+		fmt.Println(err)
 	}
 
-	anAnimal = make(Animal)
-	row := db.QueryRow(`SELECT * FROM animal WHERE id =$1`, id)
-
-	return sql.row
+	return anAnimal, err
 }
