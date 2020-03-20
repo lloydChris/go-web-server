@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"go-web-server/handlers"
 	"net/http"
 
@@ -9,18 +8,6 @@ import (
 )
 
 func main() {
-	psqlConn := "host=localhost port=5432 user=postgres password=devpwd dbname=postgres sslmode=disable"
-	db, err := sql.Open("postgres", psqlConn)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
-	err = db.Ping()
-	if err != nil {
-		panic(err)
-	}
-
 	router := mux.NewRouter()
 
 	router.HandleFunc("/animal/{id}", handlers.GetAnimal).Methods("GET")
